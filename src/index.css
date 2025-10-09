@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ====== Global Styles ====== */
+body {
+  @apply bg-gradient-to-br from-slate-900 via-blue-900 to-black text-white;
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ====== Glass Effect ====== */
+.bg-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+}
+
+/* ====== Text Glow ====== */
+.text-glow {
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+/* ====== Smooth Animation ====== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.25s ease-out forwards;
+}
+
+/* ====== Scrollbar Polishing ====== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.4);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
+}
+
+/* ====== Uniform Button Styles ====== */
+.btn-glass {
+  @apply text-white font-medium rounded-lg px-5 py-2 transition-all duration-200 shadow-md;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* ====== Primary Gradient Button ====== */
+.btn-primary {
+  @apply text-white font-semibold rounded-lg px-5 py-2 transition-all duration-200;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  box-shadow: 0 0 12px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* ====== Secondary Button ====== */
+.btn-secondary {
+  @apply text-white font-semibold rounded-lg px-5 py-2 transition-all duration-200;
+  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.4);
+}
+
+.btn-secondary:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
