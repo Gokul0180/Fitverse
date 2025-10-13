@@ -11,7 +11,7 @@ export default function Login() {
 
     const allUsers = JSON.parse(localStorage.getItem("fitverseUsers") || "[]");
     const found = allUsers.find(
-      (u) => u.email === email && u.password === password
+      (u) => u.email === email.trim() && u.password === password.trim()
     );
 
     if (!found) {
@@ -19,13 +19,23 @@ export default function Login() {
       return;
     }
 
+    // ✅ Save the active session
     localStorage.setItem("fitverseUser", JSON.stringify(found));
-    localStorage.setItem("fitverseAuth", JSON.stringify({ email: found.email }));
+    localStorage.setItem(
+      "fitverseAuth",
+      JSON.stringify({ email: found.email, loggedInAt: Date.now() })
+    );
 
     alert(`Welcome back, ${found.firstname || "User"}!`);
 
-    if (found.profileId) navigate("/dashboard");
-    else navigate("/profile-setup");
+    // ✅ Small delay to allow App.jsx to detect the login state properly
+    setTimeout(() => {
+      if (found.profileId) {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/profile-setup", { replace: true });
+      }
+    }, 200);
   };
 
   return (
@@ -35,7 +45,9 @@ export default function Login() {
         className="w-full max-w-md bg-white/10 p-8 rounded-2xl shadow-2xl border border-white/20 text-white text-center space-y-5 transition-all hover:scale-[1.01] hover:shadow-blue-600/30"
       >
         <h2 className="text-3xl font-bold text-blue-400">Welcome to FitVerse</h2>
-        <p className="text-gray-300 text-sm">Log in to track your fitness progress</p>
+        <p className="text-gray-300 text-sm">
+          Log in to track your fitness progress
+        </p>
 
         <input
           type="email"
@@ -43,6 +55,7 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email Address"
           className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
         />
         <input
           type="password"
@@ -50,6 +63,7 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
         />
 
         <button

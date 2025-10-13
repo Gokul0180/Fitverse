@@ -16,8 +16,11 @@ export default function ProfileSetup() {
   });
 
   useEffect(() => {
-    if (!user) navigate("/login");
-    else if (user.profile) setProfile(user.profile);
+    if (!user) {
+      navigate("/login", { replace: true });
+      return;
+    }
+    if (user.profile) setProfile(user.profile);
   }, []);
 
   const handleChange = (e) =>
@@ -25,10 +28,25 @@ export default function ProfileSetup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // ✅ Update current user object
     const updated = { ...user, profile, profileId: Date.now() };
     localStorage.setItem("fitverseUser", JSON.stringify(updated));
+
+    // ✅ Update users list so data persists globally
+    const allUsers = JSON.parse(localStorage.getItem("fitverseUsers") || "[]");
+    const idx = allUsers.findIndex((u) => u.email === user.email);
+    if (idx !== -1) {
+      allUsers[idx] = updated;
+      localStorage.setItem("fitverseUsers", JSON.stringify(allUsers));
+    }
+
     alert("Profile saved successfully!");
-    navigate("/dashboard");
+
+    // ✅ Delay slightly to let App.jsx detect the updated profileId
+    setTimeout(() => {
+      navigate("/dashboard", { replace: true });
+    }, 300);
   };
 
   return (
