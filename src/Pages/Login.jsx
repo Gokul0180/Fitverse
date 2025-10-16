@@ -19,7 +19,7 @@ export default function Login() {
       return;
     }
 
-    // ✅ Save the active session
+    // ✅ Save current session
     localStorage.setItem("fitverseUser", JSON.stringify(found));
     localStorage.setItem(
       "fitverseAuth",
@@ -28,14 +28,12 @@ export default function Login() {
 
     alert(`Welcome back, ${found.firstname || "User"}!`);
 
-    // ✅ Small delay to allow App.jsx to detect the login state properly
-    setTimeout(() => {
-      if (found.profileId) {
-        navigate("/dashboard", { replace: true });
-      } else {
-        navigate("/profile-setup", { replace: true });
-      }
-    }, 200);
+    // ✅ Redirect correctly
+    if (found.profileId) {
+      navigate("/dashboard", { replace: true });
+    } else {
+      navigate("/profile-setup", { replace: true });
+    }
   };
 
   return (

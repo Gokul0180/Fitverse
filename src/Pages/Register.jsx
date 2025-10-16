@@ -27,9 +27,10 @@ export default function Register() {
 
     localStorage.setItem("fitverseUsers", JSON.stringify(users));
     localStorage.setItem("fitverseUser", JSON.stringify(newUser));
-    localStorage.setItem("fitverseAuth", JSON.stringify({ userId: newUser.id }));
+    localStorage.setItem("fitverseAuth", JSON.stringify({ email: newUser.email }));
 
-    navigate("/profile-setup");
+    alert("Account created successfully!");
+    navigate("/profile-setup", { replace: true });
   };
 
   return (

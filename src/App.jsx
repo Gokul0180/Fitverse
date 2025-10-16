@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -13,14 +13,13 @@ export default function App() {
   const [hasProfile, setHasProfile] = useState(false);
   const [checkedAuth, setCheckedAuth] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // ✅ Check auth only once on load
+  // ✅ Check authentication once at app load
   useEffect(() => {
     checkAuth();
   }, []);
 
-  // ✅ Also re-check when user changes (login, logout, setup)
+  // ✅ Update when localStorage changes (like login/register/logout)
   useEffect(() => {
     const handleStorageChange = () => checkAuth();
     window.addEventListener("storage", handleStorageChange);
@@ -30,21 +29,18 @@ export default function App() {
   const checkAuth = () => {
     const user = JSON.parse(localStorage.getItem("fitverseUser") || "null");
     const auth = JSON.parse(localStorage.getItem("fitverseAuth") || "null");
-    const loggedIn = user && auth && auth.email === user.email;
 
-    setIsLoggedIn(!!loggedIn);
+    const loggedIn = !!(user && auth && auth.email === user.email);
+    setIsLoggedIn(loggedIn);
     setHasProfile(!!user?.profileId);
     setCheckedAuth(true);
 
-    // Handle initial redirect only if on root or invalid route
-    if (["#/",""].includes(window.location.hash) || location.pathname === "/") {
-      if (loggedIn && user?.profileId) {
-        navigate("/dashboard", { replace: true });
-      } else if (loggedIn && !user?.profileId) {
-        navigate("/profile-setup", { replace: true });
-      } else {
-        navigate("/login", { replace: true });
-      }
+    // ✅ Initial navigation flow
+    if (loggedIn) {
+      if (user.profileId) navigate("/dashboard", { replace: true });
+      else navigate("/profile-setup", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
     }
   };
 
@@ -61,12 +57,12 @@ export default function App() {
       {isLoggedIn && <NavBar />}
 
       <Routes>
-        {/* Auth Routes */}
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Profile Routes */}
+        {/* Profile setup & edit */}
         <Route
           path="/profile-setup"
           element={isLoggedIn ? <ProfileSetup /> : <Navigate to="/login" replace />}
