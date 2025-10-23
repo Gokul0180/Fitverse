@@ -37,7 +37,7 @@ export default function App() {
 
     // ✅ Initial navigation flow
     if (loggedIn) {
-      if (user.profileId) navigate("/dashboard", { replace: true });
+      if (user.profileId) return navigate("/dashboard", { replace: true });
       else navigate("/profile-setup", { replace: true });
     } else {
       navigate("/login", { replace: true });
