@@ -14,12 +14,10 @@ export default function App() {
   const [checkedAuth, setCheckedAuth] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Check authentication once at app load
   useEffect(() => {
     checkAuth();
   }, []);
 
-  // ✅ Update when localStorage changes (like login/register/logout)
   useEffect(() => {
     const handleStorageChange = () => checkAuth();
     window.addEventListener("storage", handleStorageChange);
@@ -34,14 +32,6 @@ export default function App() {
     setIsLoggedIn(loggedIn);
     setHasProfile(!!user?.profileId);
     setCheckedAuth(true);
-
-    // ✅ Initial navigation flow
-    if (loggedIn) {
-      if (user.profileId) return navigate("/dashboard", { replace: true });
-      else navigate("/profile-setup", { replace: true });
-    } else {
-      navigate("/login", { replace: true });
-    }
   };
 
   if (!checkedAuth) {
@@ -57,22 +47,20 @@ export default function App() {
       {isLoggedIn && <NavBar />}
 
       <Routes>
-        {/* Auth */}
+        {/* 🔹 Authentication Pages */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Profile setup & edit */}
+        {/* 🔹 Profile Setup — only after login */}
         <Route
           path="/profile-setup"
-          element={isLoggedIn ? <ProfileSetup /> : <Navigate to="/login" replace />}
-        />
-        <Route
-          path="/edit-profile"
-          element={isLoggedIn ? <ProfileEdit /> : <Navigate to="/login" replace />}
+          element={
+            isLoggedIn ? <ProfileSetup /> : <Navigate to="/login" replace />
+          }
         />
 
-        {/* Dashboard */}
+        {/* 🔹 Dashboard — accessible after login */}
         <Route
           path="/dashboard"
           element={
@@ -88,7 +76,15 @@ export default function App() {
           }
         />
 
-        {/* Fallback */}
+        {/* 🔹 Edit Profile — from Dashboard */}
+        <Route
+          path="/edit-profile"
+          element={
+            isLoggedIn ? <ProfileEdit /> : <Navigate to="/login" replace />
+          }
+        />
+
+        {/* 🔹 Default route — always goes to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </div>

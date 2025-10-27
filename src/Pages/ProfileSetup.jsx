@@ -10,7 +10,7 @@ export default function ProfileSetup() {
     gender: "",
     height: "",
     weight: "",
-    goal: "weight loss",
+    goal: "weightloss",
     workoutType: "withweight",
     dietType: "veg",
   });
